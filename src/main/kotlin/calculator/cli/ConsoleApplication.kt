@@ -14,9 +14,11 @@ class ConsoleApplication(
     private val processor: RpnProcessor,
     private val reader: BufferedReader,
     private val writer: PrintWriter,
+    private val startupHelp: StartupHelp
 ) {
 
     fun run() {
+        startupHelp.render(writer)
         while (true) {
             writer.print(PROMPT)
             writer.flush()

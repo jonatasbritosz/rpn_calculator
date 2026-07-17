@@ -17,6 +17,7 @@ class ConsoleApplicationTest {
             processor = RpnProcessor(OperationRegistry.standard(), CalculatorStack()),
             reader = StringReader(input).buffered(),
             writer = PrintWriter(output, true),
+            startupHelp = StartupHelp(OperationRegistry.standard())
         )
         application.run()
         return output.toString()
@@ -24,6 +25,7 @@ class ConsoleApplicationTest {
 
     private fun resultLines(input: String): List<String> =
         runWithInput(input)
+            .substringAfter("\n\n") // skip the startup help block
             .split("\n")
             .flatMap { it.split("> ") }
             .filter { it.isNotBlank() }

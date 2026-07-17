@@ -2,6 +2,7 @@ package calculator
 
 import calculator.application.RpnProcessor
 import calculator.cli.ConsoleApplication
+import calculator.cli.StartupHelp
 import calculator.domain.CalculatorStack
 import calculator.domain.OperationRegistry
 import java.io.PrintWriter
@@ -13,6 +14,7 @@ fun main() {
         processor = processor,
         reader = System.`in`.bufferedReader(),
         writer = PrintWriter(System.out, true),
+        startupHelp = StartupHelp(registry)
     )
     application.run()
 }
