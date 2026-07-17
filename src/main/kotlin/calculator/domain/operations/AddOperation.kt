@@ -5,5 +5,5 @@ import calculator.domain.BinaryOperation
 object AddOperation : BinaryOperation {
     override val symbol = "+"
 
-    override fun apply(left: Double, right: Double): Double = left.plus(right)
+    override fun apply(left: Double, right: Double): Double = left + right
 }

@@ -9,6 +9,6 @@ object DivideOperation : BinaryOperation {
         if (right == 0.0) {
             throw ArithmeticException("Division by zero")
         }
-        return left.div(right)
+        return left / right
     }
 }
