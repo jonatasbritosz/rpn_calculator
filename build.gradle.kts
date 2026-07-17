@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.4.0"
+    application
 }
 
 group = "calculator"
@@ -19,4 +20,12 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass = "calculator.MainKt"
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
 }
