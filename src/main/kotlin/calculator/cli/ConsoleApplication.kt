@@ -6,9 +6,10 @@ import java.io.BufferedReader
 import java.io.PrintWriter
 
 /**
- * Console adapter: reads whitespace-delimited tokens line by line and writes
- * processor outcomes. Stops immediately on an [ProcessingResult.Exit] outcome
- * or on end of input (EOF).
+ * Console adapter: reads whitespace-delimited tokens line by line, prints
+ * errors as they occur, and echoes only the final result of each line (the
+ * top of the stack after the last successful token). Stops immediately on an
+ * [ProcessingResult.Exit] outcome or on end of input (EOF).
  */
 class ConsoleApplication(
     private val processor: RpnProcessor,
@@ -28,14 +29,19 @@ class ConsoleApplication(
     }
 
     private fun processLine(line: String): Boolean {
+        var lastResult: String? = null
         for (token in line.split(WHITESPACE).filter(String::isNotEmpty)) {
             when (val result = processor.process(token)) {
-                is ProcessingResult.Output -> writer.println(result.text)
+                is ProcessingResult.Output -> lastResult = result.text
                 is ProcessingResult.Error -> writer.println(result.text)
                 ProcessingResult.ContinueSilently -> Unit
-                ProcessingResult.Exit -> return false
+                ProcessingResult.Exit -> {
+                    lastResult?.let(writer::println)
+                    return false
+                }
             }
         }
+        lastResult?.let(writer::println)
         return true
     }
 

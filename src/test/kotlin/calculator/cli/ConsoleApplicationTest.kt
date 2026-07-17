@@ -36,10 +36,11 @@ class ConsoleApplicationTest {
     }
 
     @Test
-    fun `processes multiple tokens per line from left to right`() {
+    fun `multi-token line prints only its final result`() {
+        assertEquals(listOf("-13.0"), resultLines("5 5 5 8 + + -\nq\n"))
         assertEquals(
-            listOf("5.0", "5.0", "5.0", "8.0", "13.0", "18.0", "-13.0"),
-            resultLines("5 5 5 8 + + -\nq\n"),
+            listOf("-13.0", "0.0"),
+            resultLines("5 5 5 8 + + -\n13 +\nq\n"),
         )
     }
 
@@ -51,9 +52,30 @@ class ConsoleApplicationTest {
     @Test
     fun `errors are reported and processing continues`() {
         assertEquals(
-            listOf("5.0", "Unrecognized token: abc", "8.0", "13.0"),
+            listOf("5.0", "Unrecognized token: abc", "13.0"),
             resultLines("5\nabc\n8 +\nq\n"),
         )
+    }
+
+    @Test
+    fun `mid-line error prints the error and still echoes the line result`() {
+        assertEquals(
+            listOf("Unrecognized token: bogus", "13.0"),
+            resultLines("5 8 + bogus\nq\n"),
+        )
+    }
+
+    @Test
+    fun `line with only errors prints no result`() {
+        assertEquals(
+            listOf("Unrecognized token: abc", "Operator '+' requires 2 operands, but the stack has 0"),
+            resultLines("abc +\nq\n"),
+        )
+    }
+
+    @Test
+    fun `q after tokens on the same line still prints the pending result`() {
+        assertEquals(listOf("13.0"), resultLines("5 8 + q\n"))
     }
 
     @Test
